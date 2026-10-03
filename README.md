@@ -4,7 +4,6 @@
 [![LangGraph](https://img.shields.io/badge/Orchestrator-LangGraph-orange.svg)](https://github.com/langchain-ai/langgraph)
 [![Streamlit](https://img.shields.io/badge/Frontend-Streamlit-red.svg)](https://streamlit.io/)
 [![Web-RAG](https://img.shields.io/badge/Retrieval-Tavily%20%2B%20DuckDuckGo-green.svg)](https://tavily.com/)
-[![Tests](https://img.shields.io/badge/Tests-100%25%20Passing-brightgreen.svg)]()
 [![Hallucination](https://img.shields.io/badge/Numerical%20Hallucination-0%25-success.svg)]()
 
 > **"An autonomous multi-agent pipeline that transforms natural language prompts into live datasets via Web-RAG, executes verified sandboxed code, and compiles complete 13-stage project reports with 0% numerical hallucination."**
@@ -126,9 +125,6 @@ Anvil_multi-agent/
 │       ├── code_agent.py         # Agent 2: Task-driven code synthesis & sandbox run
 │       └── report_agent.py       # Agent 3: 13-stage DOCX compilation & parsing
 │
-├── tests/
-│   └── test_pipeline.py          # Complete unit test suite (7 automated tests)
-│
 └── README.md                     # Complete project documentation
 ```
 
@@ -188,30 +184,6 @@ Open [http://localhost:8501](http://localhost:8501) in your browser.
 ### 5. Run from Command Line (CLI)
 ```bash
 python src/main.py "predict stock price for tata steel for next 5 days"
-```
-
----
-
-## Running Unit Tests
-
-Run the test suite to verify code extraction, document generation, Web-RAG search, and all 6 analytical archetypes:
-
-```bash
-python tests/test_pipeline.py
-```
-
-Expected output:
-```text
-Running Anvil 3-Agent Unit Tests...
-test_code_extraction PASSED
-test_docx_generation PASSED
-test_graph_structure PASSED
-test_domain_fallback PASSED
-test_duckduckgo_webrag PASSED
-test_tavily_webrag PASSED
-test_task_solution_and_interpretation PASSED
-
-ALL 3-AGENT ANVIL TESTS PASSED!
 ```
 
 ---
