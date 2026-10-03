@@ -129,9 +129,6 @@ Anvil_multi-agent/
 ├── tests/
 │   └── test_pipeline.py          # Complete unit test suite (7 automated tests)
 │
-├── scripts/
-│   └── build_presentation.py    # Executive 14-slide PPTX deck builder
-│
 └── README.md                     # Complete project documentation
 ```
 
