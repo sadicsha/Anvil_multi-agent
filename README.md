@@ -1,4 +1,4 @@
-# ⚒️ Project Anvil: Autonomous Multi-Agent Data Science & Engineering Platform
+# Project Anvil: Autonomous Multi-Agent Data Science & Engineering Platform
 
 [![Python](https://img.shields.io/badge/Python-3.11%20%7C%203.12-blue.svg)](https://www.python.org/)
 [![LangGraph](https://img.shields.io/badge/Orchestrator-LangGraph-orange.svg)](https://github.com/langchain-ai/langgraph)
@@ -11,7 +11,7 @@
 
 ---
 
-## 📌 Executive Summary
+## Executive Summary
 
 Traditional LLM workflows suffer from **mathematical hallucination**—when asked for statistical analysis or forecasting, language models generate plausible-sounding but fictitious figures. 
 
@@ -21,13 +21,13 @@ Traditional LLM workflows suffer from **mathematical hallucination**—when aske
 * The reporting agent directly incorporates empirical numbers rather than inferring them.
 
 From a single conversational sentence (e.g., *"predict stock price for Tata Steel for next 5 days"*), Anvil coordinates **three specialized agents** via **LangGraph** to deliver three production artifacts in under 15 seconds:
-1. 📊 **`dataset.csv`** — Retrieved via real-time Web-RAG or curated domain generators.
-2. 💻 **`solution.py`** — Executable, sandboxed data science code adhering to a 7-part mathematical contract.
-3. 📄 **`PROJECT_REPORT.docx`** — A formal 13-stage engineering lifecycle project report styled in academic formatting.
+1. **`dataset.csv`** — Retrieved via real-time Web-RAG or curated domain generators.
+2. **`solution.py`** — Executable, sandboxed data science code adhering to a 7-part mathematical contract.
+3. **`PROJECT_REPORT.docx`** — A formal 13-stage engineering lifecycle project report styled in academic formatting.
 
 ---
 
-## 🏛️ System Architecture
+## System Architecture
 
 Anvil operates on a deterministic, linear state machine governed by **LangGraph**:
 
@@ -61,9 +61,9 @@ graph TD
 
 ---
 
-## 🤖 The 3-Agent Collaborative Pipeline
+## The 3-Agent Collaborative Pipeline
 
-### 1. 🔍 Agent 1: Data Agent (`src/agents/data_agent.py`)
+### 1. Agent 1: Data Agent (`src/agents/data_agent.py`)
 * **Role**: Autonomous Data Acquisition & Engineering.
 * **Mechanism**:
   * Extracts search queries from natural language requests.
@@ -72,7 +72,7 @@ graph TD
   * Audits missing values, typecasts columns, and limits sample size to 250 rows for snappy execution.
   * **Zero-Failure Fallback**: If network limits occur, an autonomous fallback generator creates realistic domain data for Churn, Stocks, Sentiment, Fraud, or Regression.
 
-### 2. ⚡ Agent 2: Code Agent (`src/agents/code_agent.py`)
+### 2. Agent 2: Code Agent (`src/agents/code_agent.py`)
 * **Role**: Computational Scientist & Code Synthesizer.
 * **Mechanism**:
   * Inspects `dataset.csv` schema and classifies the task into one of **6 Mathematical Archetypes**:
@@ -84,7 +84,7 @@ graph TD
     6. **Universal Exploratory Analysis**: Generic distribution statistics and variance analysis.
   * Runs the code in an isolated subprocess (`src/sandbox.py`) guarded by a **15-second timeout** and captures `stdout`/`stderr`.
 
-### 3. 📝 Agent 3: Report Agent (`src/agents/report_agent.py`)
+### 3. Agent 3: Report Agent (`src/agents/report_agent.py`)
 * **Role**: Technical Documentation Writer.
 * **Mechanism**:
   * Ingests the raw terminal output and parses the 7 required sections using regular expressions.
@@ -106,7 +106,7 @@ graph TD
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```text
 Anvil_multi-agent/
@@ -137,7 +137,7 @@ Anvil_multi-agent/
 
 ---
 
-## 🔌 APIs & Technologies Used
+## APIs & Technologies Used
 
 | Technology | Layer | Purpose |
 | :--- | :--- | :--- |
@@ -151,7 +151,7 @@ Anvil_multi-agent/
 
 ---
 
-## 🚀 Quickstart Guide
+## Quickstart Guide
 
 ### 1. Prerequisites
 * Python 3.11 or 3.12
@@ -195,7 +195,7 @@ python src/main.py "predict stock price for tata steel for next 5 days"
 
 ---
 
-## 🧪 Running Unit Tests
+## Running Unit Tests
 
 Run the test suite to verify code extraction, document generation, Web-RAG search, and all 6 analytical archetypes:
 
@@ -219,7 +219,7 @@ ALL 3-AGENT ANVIL TESTS PASSED!
 
 ---
 
-## 👤 Author
+## Author
 **Sadicsha Khandait**  
 Symbiosis Centre for Information Technology (SCIT)  
 GitHub: [@sadicsha](https://github.com/sadicsha)
