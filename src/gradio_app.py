@@ -35,7 +35,7 @@ DEFAULT_MODEL = "qwen2.5-coder:1.5b" if any("1.5b" in m for m in available) else
 def run_pipeline(user_topic: str, dataset_url: str):
     if not user_topic or not user_topic.strip():
         yield (
-            "⚠️ Please enter a project topic or requirement.",
+            "<div class='status-box status-warning'>Please enter a project topic or requirement.</div>",
             None, None, "",
             "", None, "",
             None, ""
@@ -49,7 +49,7 @@ def run_pipeline(user_topic: str, dataset_url: str):
         ready, msg = check_ollama_status(DEFAULT_MODEL)
         if not ready:
             yield (
-                f"❌ Ollama is not ready: {msg}",
+                f"<div class='status-box status-error'>Ollama is not ready: {msg}</div>",
                 None, None, "",
                 "", None, "",
                 None, ""
@@ -77,7 +77,7 @@ def run_pipeline(user_topic: str, dataset_url: str):
     accumulated_state = dict(initial_state)
 
     yield (
-        "⏳ **Agent 1 (Data Agent)**: Searching the web with Web-RAG & ingesting dataset...",
+        "<div class='status-box status-info'><strong>Agent 1 (Data Agent)</strong>: Searching the web with Web-RAG and ingesting dataset...</div>",
         None, None, "",
         "", None, "",
         None, ""
@@ -89,14 +89,14 @@ def run_pipeline(user_topic: str, dataset_url: str):
                 accumulated_state.update(node_output)
                 if node_name == "data_agent":
                     yield (
-                        "⏳ **Agent 2 (Code Agent)**: Synthesizing code & executing in sandbox...",
+                        "<div class='status-box status-info'><strong>Agent 2 (Code Agent)</strong>: Synthesizing code and executing in sandbox...</div>",
                         None, None, "",
                         "", None, "",
                         None, ""
                     )
                 elif node_name == "code_agent":
                     yield (
-                        "⏳ **Agent 3 (Report Agent)**: Compiling 13-stage Word Project Report...",
+                        "<div class='status-box status-info'><strong>Agent 3 (Report Agent)</strong>: Compiling 13-stage Word Project Report...</div>",
                         None, None, "",
                         "", None, "",
                         None, ""
@@ -119,12 +119,12 @@ def run_pipeline(user_topic: str, dataset_url: str):
         report_text = accumulated_state.get("report_text", "")
         source_url = accumulated_state.get("dataset_source_url")
 
-        source_info = f"🌐 **Web-RAG Source:** [{source_url}]({source_url})\n\n" if source_url else ""
+        source_info = f"**Web-RAG Source:** [{source_url}]({source_url})\n\n" if source_url else ""
         raw_summary = accumulated_state.get("dataset_summary", "")
         clean_summary = raw_summary.split("\nFirst 3 Sample Records:")[0].split("First 3 Sample Records:")[0].strip()
         data_info = source_info + f"```text\n{clean_summary}\n```"
 
-        status_msg = f"✅ **Project Anvil Complete!** All 3 deliverables generated successfully in under 15 seconds."
+        status_msg = "<div class='status-box status-success'><strong>Project Anvil Complete!</strong> All 3 deliverables generated successfully in under 15 seconds.</div>"
 
         yield (
             status_msg,
@@ -140,56 +140,147 @@ def run_pipeline(user_topic: str, dataset_url: str):
 
     except Exception as e:
         yield (
-            f"❌ Execution Error: {str(e)}",
+            f"<div class='status-box status-error'>Execution Error: {str(e)}</div>",
             None, None, "",
             "", None, "",
             None, ""
         )
 
 
+custom_css = """
+.gradio-container {
+    max-width: 1200px !important;
+    margin: auto !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+}
+
+.banner-card {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #06b6d4 100%);
+    border-radius: 14px;
+    padding: 24px 28px;
+    color: #ffffff;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 20px -4px rgba(30, 58, 138, 0.35);
+}
+
+.banner-card h1 {
+    color: #ffffff !important;
+    margin: 0 0 6px 0 !important;
+    font-size: 26px !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.5px;
+}
+
+.banner-card p {
+    color: #dbeafe !important;
+    margin: 0 !important;
+    font-size: 14px !important;
+    font-weight: 400;
+}
+
+.generate-button {
+    background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    border-radius: 10px !important;
+    border: none !important;
+    padding: 12px 24px !important;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4) !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+.generate-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5) !important;
+}
+
+.status-box {
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin: 10px 0;
+}
+
+.status-info {
+    background-color: #eff6ff;
+    color: #1e40af;
+    border-left: 4px solid #3b82f6;
+}
+
+.status-success {
+    background-color: #f0fdf4;
+    color: #166534;
+    border-left: 4px solid #22c55e;
+}
+
+.status-warning {
+    background-color: #fffbeb;
+    color: #92400e;
+    border-left: 4px solid #f59e0b;
+}
+
+.status-error {
+    background-color: #fef2f2;
+    color: #991b1b;
+    border-left: 4px solid #ef4444;
+}
+
+.deliverables-header {
+    background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700 !important;
+    font-size: 20px !important;
+    margin-top: 15px !important;
+}
+"""
+
+
 def create_gradio_app():
     with gr.Blocks(title="Anvil — Autonomous Multi-Agent Data Science Platform") as demo:
-        gr.Markdown(
+        gr.HTML(
             """
-            # ⚒️ Project Anvil: Autonomous Multi-Agent Data Science Platform
-            **LangGraph State Machine • Web-RAG Data Discovery • Sandboxed Execution • 13-Stage Word Reports**
+            <div class="banner-card">
+                <h1>Project Anvil: Autonomous Multi-Agent Data Science Platform</h1>
+                <p>Enterprise Analytics Engine with Deterministic Code Execution and Automated Documentation</p>
+            </div>
             """
         )
 
         with gr.Row():
             with gr.Column(scale=3):
                 topic_input = gr.Textbox(
-                    label="💡 Project Topic or Requirement",
+                    label="Project Topic or Requirement",
                     placeholder="e.g., Customer Churn Prediction in Telecom, Student Exam Performance Analysis, Stock Price Forecasting...",
                     lines=1
                 )
             with gr.Column(scale=2):
                 url_input = gr.Textbox(
-                    label="🌐 Online Dataset URL (Optional)",
+                    label="Online Dataset URL (Optional)",
                     placeholder="https://raw.githubusercontent.com/.../data.csv (Leave blank for Web-RAG)",
                     lines=1
                 )
 
-        generate_btn = gr.Button("🚀 Generate Project", variant="primary", size="lg")
-        status_box = gr.Markdown("💡 Enter a topic above and click **Generate Project** to deploy the 3 AI agents.")
+        generate_btn = gr.Button("Generate Project", variant="primary", size="lg", elem_classes=["generate-button"])
+        status_box = gr.HTML("<div class='status-box status-info'>Enter a topic above and click <strong>Generate Project</strong> to deploy the 3 AI agents.</div>")
 
-        gr.Markdown("---")
-        gr.Markdown("### 📦 Project Deliverables")
+        gr.HTML("<div class='deliverables-header'>Project Deliverables</div>")
 
         with gr.Tabs():
-            with gr.TabItem("📊 1. Dataset (CSV)"):
+            with gr.TabItem("1. Dataset (CSV)"):
                 data_summary_md = gr.Markdown()
-                csv_download = gr.File(label="⬇️ Download dataset.csv")
+                csv_download = gr.File(label="Download dataset.csv")
                 df_preview = gr.Dataframe(label="Interactive Dataset Table Preview", interactive=False)
 
-            with gr.TabItem("💻 2. Python Code (solution.py)"):
-                code_download = gr.File(label="⬇️ Download solution.py")
+            with gr.TabItem("2. Python Code (solution.py)"):
+                code_download = gr.File(label="Download solution.py")
                 code_display = gr.Code(label="Standalone Python Script (7-Part Analytical Contract)", language="python")
-                with gr.Accordion("⚙️ View Terminal Execution Output (7-Part Analysis Log)", open=True):
-                    exec_output_display = gr.Textbox(label="Sandbox Stdout/Stderr Execution Log", lines=12)
+                with gr.Accordion("View Terminal Execution Output (7-Part Analysis Log)", open=True):
+                    exec_output_display = gr.Textbox(label="Sandbox Execution Log", lines=12)
 
-            with gr.TabItem("📄 3. Word Project Report (.docx)"):
-                report_download = gr.File(label="⬇️ Download Word Report (PROJECT_REPORT.docx)")
+            with gr.TabItem("3. Word Project Report (.docx)"):
+                report_download = gr.File(label="Download Word Report (PROJECT_REPORT.docx)")
                 report_preview_md = gr.Markdown(label="Executive Report Preview (13 Lifecycle Stages)")
 
         generate_btn.click(
@@ -213,6 +304,11 @@ def create_gradio_app():
 
 if __name__ == "__main__":
     demo = create_gradio_app()
+    app_theme = gr.themes.Soft(
+        primary_hue=gr.themes.colors.blue,
+        secondary_hue=gr.themes.colors.indigo,
+        neutral_hue=gr.themes.colors.slate
+    )
     print("\nProject Anvil Gradio Interface is running!", flush=True)
     print("Open your browser at: http://127.0.0.1:7860\n", flush=True)
-    demo.launch(server_name="127.0.0.1", server_port=7860, share=False)
+    demo.launch(server_name="127.0.0.1", server_port=7860, share=False, theme=app_theme, css=custom_css)
