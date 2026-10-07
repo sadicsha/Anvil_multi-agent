@@ -24,19 +24,72 @@ from src.utils import get_available_models, check_ollama_status
 # ============================================================
 
 st.set_page_config(
-    page_title="Anvil — Multi-Agent Project Builder",
-    page_icon="⚒️",
+    page_title="Project Anvil — Multi-Agent Data Science Platform",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Custom styling
+# Custom colorful styling
 st.markdown("""
 <style>
-    .block-container { padding-top: 2rem; padding-bottom: 2rem; }
-    .stButton>button { border-radius: 6px; font-weight: 600; }
-    .stDownloadButton>button { border-radius: 6px; font-weight: 600; width: 100%; }
-    div[data-testid="stExpander"] { border-radius: 6px; border: 1px solid #e0e0e0; }
+    .block-container { padding-top: 1.5rem; padding-bottom: 2rem; }
+    
+    /* Vibrant Gradient Header */
+    .banner-container {
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #06b6d4 100%);
+        border-radius: 14px;
+        padding: 24px 28px;
+        color: #ffffff;
+        margin-bottom: 24px;
+        box-shadow: 0 8px 20px -4px rgba(30, 58, 138, 0.35);
+    }
+    .banner-title {
+        color: #ffffff !important;
+        margin: 0 0 6px 0 !important;
+        font-size: 26px !important;
+        font-weight: 700 !important;
+        letter-spacing: -0.5px;
+    }
+    .banner-subtitle {
+        color: #dbeafe !important;
+        margin: 0 !important;
+        font-size: 14px !important;
+        font-weight: 400;
+    }
+
+    /* Vibrant Primary Button */
+    .stButton>button {
+        background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%) !important;
+        color: #ffffff !important;
+        font-weight: 600 !important;
+        border-radius: 8px !important;
+        border: none !important;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35) !important;
+        transition: all 0.2s ease-in-out !important;
+    }
+    .stButton>button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45) !important;
+    }
+
+    /* Download Buttons */
+    .stDownloadButton>button {
+        border-radius: 8px !important;
+        font-weight: 600 !important;
+        width: 100% !important;
+        border: 1px solid #dbeafe !important;
+        background-color: #f8fafc !important;
+        color: #1e3a8a !important;
+    }
+    .stDownloadButton>button:hover {
+        background-color: #eff6ff !important;
+        border-color: #3b82f6 !important;
+    }
+
+    div[data-testid="stExpander"] {
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -109,9 +162,9 @@ DEFAULT_MODEL = "qwen2.5-coder:1.5b" if any("1.5b" in m for m in available) else
 # ============================================================
 
 with st.sidebar:
-    st.header("📜 Project History")
+    st.header("Project History")
 
-    if st.button("➕ New Project", use_container_width=True):
+    if st.button("New Project", use_container_width=True):
         st.session_state.result = None
         st.session_state.current_topic = ""
         st.rerun()
@@ -125,7 +178,7 @@ with st.sidebar:
         for idx, item in enumerate(st.session_state.history):
             topic_name = item.get("topic") or item.get("request", "Untitled")
             timestamp = item.get("timestamp", "")
-            btn_label = f"📁 {topic_name[:24]}...\n({timestamp})" if len(topic_name) > 24 else f"📁 {topic_name}\n({timestamp})"
+            btn_label = f"{topic_name[:24]}...\n({timestamp})" if len(topic_name) > 24 else f"{topic_name}\n({timestamp})"
 
             if st.button(btn_label, key=f"hist_btn_{idx}", use_container_width=True):
                 st.session_state.result = item.get("result", item)
@@ -133,7 +186,7 @@ with st.sidebar:
                 st.rerun()
 
         st.divider()
-        if st.button("🗑️ Clear History", use_container_width=True):
+        if st.button("Clear History", use_container_width=True):
             st.session_state.history = []
             st.session_state.result = None
             st.session_state.current_topic = ""
@@ -141,20 +194,24 @@ with st.sidebar:
             st.rerun()
 
 
-
-
 # ============================================================
 # MAIN APPLICATION INTERFACE
 # ============================================================
 
-st.title("⚒️ Anvil")
+# Colorful Header Card
+st.markdown("""
+<div class="banner-container">
+    <div class="banner-title">Project Anvil: Autonomous Multi-Agent Data Science Platform</div>
+    <div class="banner-subtitle">Enterprise Analytics Engine with Deterministic Code Execution and Automated Documentation</div>
+</div>
+""", unsafe_allow_html=True)
 
 # Prompt Input
 col_input, col_url = st.columns([2, 1], gap="medium")
 
 with col_input:
     user_topic = st.text_input(
-        "💡 Project Topic or Requirement",
+        "Project Topic or Requirement",
         value=st.session_state.current_topic,
         placeholder="e.g. Student Exam Performance Analysis, Customer Churn, House Price Prediction...",
         help="Describe what project Anvil should build."
@@ -162,12 +219,12 @@ with col_input:
 
 with col_url:
     dataset_url = st.text_input(
-        "🌐 Online Dataset URL (Optional)",
+        "Online Dataset URL (Optional)",
         placeholder="https://raw.githubusercontent.com/.../data.csv",
-        help="Optional. If left blank, the Data Agent uses Tavily / DuckDuckGo Web-RAG to find and download real datasets automatically."
+        help="Optional. If left blank, the Data Agent uses Web-RAG to find and download real datasets automatically."
     )
 
-generate_btn = st.button("🚀 Generate Project", type="primary", use_container_width=True)
+generate_btn = st.button("Generate Project", type="primary", use_container_width=True)
 
 # ============================================================
 # EXECUTION FLOW
@@ -181,7 +238,7 @@ if generate_btn:
     if DEFAULT_PROVIDER == "ollama":
         ready, msg = check_ollama_status(DEFAULT_MODEL)
         if not ready:
-            st.error(f"❌ Ollama is not ready: {msg}")
+            st.error(f"Ollama is not ready: {msg}")
             st.stop()
 
     initial_state = {
@@ -207,7 +264,7 @@ if generate_btn:
     accumulated_state = dict(initial_state)
 
     try:
-        status_card.info("🌐 **Agent 1 (Data Agent)**: Searching the web with Tavily Web-RAG...")
+        status_card.info("**Agent 1 (Data Agent)**: Searching the web with Web-RAG...")
         progress_bar.progress(15)
 
         for step_update in anvil_graph.stream(initial_state, stream_mode="updates"):
@@ -216,15 +273,15 @@ if generate_btn:
 
                 if node_name == "data_agent":
                     progress_bar.progress(45)
-                    status_card.info("💻 **Agent 2 (Code Agent)**: Performing 7-part statistical data analysis...")
+                    status_card.info("**Agent 2 (Code Agent)**: Performing 7-part statistical data analysis...")
 
                 elif node_name == "code_agent":
                     progress_bar.progress(80)
-                    status_card.info("📄 **Agent 3 (Report Agent)**: Formatting Word (.docx) Project Report...")
+                    status_card.info("**Agent 3 (Report Agent)**: Formatting Word (.docx) Project Report...")
 
                 elif node_name == "report_agent":
                     progress_bar.progress(100)
-                    status_card.success("✅ **Anvil Pipeline Complete!** All artifacts are ready.")
+                    status_card.success("**Anvil Pipeline Complete!** All artifacts are ready.")
 
         # Save to session and history
         st.session_state.result = accumulated_state
@@ -243,7 +300,7 @@ if generate_btn:
         st.rerun()
 
     except Exception as e:
-        status_card.error(f"❌ Pipeline Execution Error: {str(e)}")
+        status_card.error(f"Pipeline Execution Error: {str(e)}")
 
 
 # ============================================================
@@ -254,22 +311,22 @@ result = st.session_state.result
 
 if result:
     st.divider()
-    st.subheader(f"📦 Deliverables: {st.session_state.get('current_topic', 'Project')}")
+    st.subheader(f"Deliverables: {st.session_state.get('current_topic', 'Project')}")
 
     tab_data, tab_code, tab_report = st.tabs([
-        "📊 1. Dataset (CSV)",
-        "💻 2. Python Code (solution.py)",
-        "📄 3. Word Project Report (.docx)"
+        "1. Dataset (CSV)",
+        "2. Python Code (solution.py)",
+        "3. Word Project Report (.docx)"
     ])
 
     # --------------------------------------------------------
     # TAB 1: DATASET
     # --------------------------------------------------------
     with tab_data:
-        st.markdown("### 📊 Dataset Details")
+        st.markdown("### Dataset Details")
         source_url = result.get("dataset_source_url")
         if source_url:
-            st.info(f"🌐 **Live Web-RAG Source:** [{source_url}]({source_url})")
+            st.info(f"**Live Web-RAG Source:** [{source_url}]({source_url})")
 
         raw_summary = result.get("dataset_summary", "No summary available.")
         clean_summary = raw_summary.split("\nFirst 3 Sample Records:")[0].split("First 3 Sample Records:")[0].strip()
@@ -286,7 +343,7 @@ if result:
             col_d1, _ = st.columns([1, 3])
             with col_d1:
                 st.download_button(
-                    label="⬇️ Download dataset.csv",
+                    label="Download dataset.csv",
                     data=csv_content,
                     file_name="dataset.csv",
                     mime="text/csv",
@@ -297,7 +354,7 @@ if result:
     # TAB 2: PYTHON CODE
     # --------------------------------------------------------
     with tab_code:
-        st.markdown("### 💻 Standalone Python Implementation (`solution.py`)")
+        st.markdown("### Standalone Python Implementation (`solution.py`)")
 
         code_str = result.get("code", "")
         if code_str:
@@ -306,7 +363,7 @@ if result:
             col_c1, _ = st.columns([1, 3])
             with col_c1:
                 st.download_button(
-                    label="⬇️ Download solution.py",
+                    label="Download solution.py",
                     data=code_str,
                     file_name="solution.py",
                     mime="text/x-python",
@@ -315,14 +372,14 @@ if result:
 
         exec_out = result.get("execution_output")
         if exec_out:
-            with st.expander("⚙️ View Terminal Execution Output (7-Part Analysis Log)", expanded=True):
+            with st.expander("View Terminal Execution Output (7-Part Analysis Log)", expanded=True):
                 st.code(exec_out, language="text")
 
     # --------------------------------------------------------
     # TAB 3: WORD PROJECT REPORT
     # --------------------------------------------------------
     with tab_report:
-        st.markdown("### 📄 Professional Word Project Report (`PROJECT_REPORT.docx`)")
+        st.markdown("### Professional Word Project Report (`PROJECT_REPORT.docx`)")
         docx_path_str = result.get("report_docx_path")
 
         if docx_path_str and os.path.exists(docx_path_str):
@@ -335,7 +392,7 @@ if result:
             col_r1, col_r2 = st.columns([1, 1])
             with col_r1:
                 st.download_button(
-                    label="⬇️ Download Word Report (PROJECT_REPORT.docx)",
+                    label="Download Word Report (PROJECT_REPORT.docx)",
                     data=docx_bytes,
                     file_name="PROJECT_REPORT.docx",
                     mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -344,15 +401,15 @@ if result:
             if pptx_bytes:
                 with col_r2:
                     st.download_button(
-                        label="📊 Download Project Presentation (.pptx)",
+                        label="Download Project Presentation (.pptx)",
                         data=pptx_bytes,
                         file_name="Project_Anvil_Presentation.pptx",
                         mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
                         use_container_width=True
                     )
 
-        st.markdown("#### 📖 Executive Report Preview")
+        st.markdown("#### Executive Report Preview")
         st.markdown(result.get("report_text", "Report generation pending."))
 
 else:
-    st.info("💡 Enter your project idea above and click **🚀 Generate Project** to build your dataset, Python code, and Word report.")
+    st.info("Enter your project idea above and click **Generate Project** to build your dataset, Python code, and Word report.")
