@@ -1,5 +1,11 @@
 import os
 import sys
+
+print("=========================================================", flush=True)
+print("Starting Project Anvil — Gradio Frontend", flush=True)
+print("Loading libraries and multi-agent workflow...", flush=True)
+print("=========================================================", flush=True)
+
 import io
 from pathlib import Path
 import pandas as pd
@@ -207,4 +213,6 @@ def create_gradio_app():
 
 if __name__ == "__main__":
     demo = create_gradio_app()
+    print("\nProject Anvil Gradio Interface is running!", flush=True)
+    print("Open your browser at: http://127.0.0.1:7860\n", flush=True)
     demo.launch(server_name="127.0.0.1", server_port=7860, share=False)

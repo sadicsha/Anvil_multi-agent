@@ -279,7 +279,7 @@ if result:
         if csv_content:
             try:
                 df = pd.read_csv(io.StringIO(csv_content))
-                st.dataframe(df, use_container_width=True)
+                st.dataframe(df, width="stretch")
             except Exception:
                 st.code(csv_content, language="text")
 
