@@ -113,6 +113,7 @@ Anvil_multi-agent/
 ├── src/
 │   ├── __init__.py               # Package initializer
 │   ├── app.py                    # Streamlit web dashboard (3 interactive tabs)
+│   ├── gradio_app.py             # Gradio web interface (Hugging Face ready)
 │   ├── graph.py                  # LangGraph state machine coordinator
 │   ├── main.py                   # Direct CLI runner
 │   ├── sandbox.py                # Isolated subprocess execution engine
@@ -176,10 +177,18 @@ GEMINI_API_KEY=your_gemini_key       # Alternative cloud LLM
 *(Note: If no keys are provided, Anvil defaults to local domain datasets and local Ollama inference).*
 
 ### 4. Run the Web Application
+
+**Option A: Streamlit Dashboard (Default)**
 ```bash
 streamlit run src/app.py
 ```
 Open [http://localhost:8501](http://localhost:8501) in your browser.
+
+**Option B: Gradio Interface (Hugging Face Ready)**
+```bash
+python src/gradio_app.py
+```
+Open [http://127.0.0.1:7860](http://127.0.0.1:7860) in your browser.
 
 ### 5. Run from Command Line (CLI)
 ```bash
