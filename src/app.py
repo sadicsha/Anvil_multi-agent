@@ -140,13 +140,7 @@ with st.sidebar:
             save_history([])
             st.rerun()
 
-    st.divider()
-    st.markdown("### 🔑 API Configuration")
-    tavily_key = os.environ.get("TAVILY_API_KEY", "")
-    if tavily_key:
-        st.success("🟢 **Tavily Web-RAG:** Connected")
-    else:
-        st.info("🌐 **Web-RAG:** DuckDuckGo (Fallback)")
+
 
 
 # ============================================================
